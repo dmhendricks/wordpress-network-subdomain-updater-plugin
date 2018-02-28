@@ -99,7 +99,7 @@ PHP 7 or higher Options:
 define('NETWORK_LOCAL_UPDATE_NOTIFY', [ 'email' => 'you@yourdomain.com', 'subject' => 'Site sync!', 'message' => 'This space intentionally left blank.' ] );
 ```
 
-#### Use Case
+### Use Case
 
 Let's assume the following:
 
