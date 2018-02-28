@@ -33,11 +33,11 @@ Now, each time that you import MySQL dumps from your remote server to your local
 
 To install, simply download the `network-subdomain-updater.php` file and place it in your `wp-content/mu-plugins` directory (create one if it doesn't exist). Don't copy the other files - they are not necessary.
 
-### Configuration
+## Configuration
 
 Simply define a `NETWORK_LOCAL_DOMAIN` constant in the `wp-config.php` for each instance you wish to use it on.
 
-#### Constants
+### Constants
 
 This plugin is configured with constants that you defined in your development/staging environments `wp-config.php` files.
 
