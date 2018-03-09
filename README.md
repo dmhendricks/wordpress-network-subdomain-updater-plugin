@@ -96,7 +96,7 @@ define( 'NETWORK_LOCAL_UPDATE_NOTIFY', 'you@example.com' );
 
 PHP 7 or higher Options:
 ```
-define('NETWORK_LOCAL_UPDATE_NOTIFY', [ 'email' => 'you@yourdomain.com', 'subject' => 'Site sync!', 'message' => 'This space intentionally left blank.' ] );
+define( 'NETWORK_LOCAL_UPDATE_NOTIFY', [ 'email' => 'you@yourdomain.com', 'subject' => 'Site sync!', 'message' => 'This space intentionally left blank.' ] );
 ```
 
 ### Use Case
@@ -115,6 +115,17 @@ define( 'NETWORK_LOCAL_DOMAIN', 'staging.example.com' );
 In your *development* environment's `wp-config.php`, you might define `NETWORK_LOCAL_DOMAIN` as follows:
 ```
 define( 'NETWORK_LOCAL_DOMAIN', 'example.local' );
+```
+
+### Typical Example
+
+Below is a typical example of the constants that you'd add/change in `wp-config.php`:
+
+```
+define( 'DOMAIN_CURRENT_SITE', 'mysite.local' );
+define( 'NETWORK_LOCAL_DOMAIN', 'mysite.local' );
+define( 'WP_ADMIN_EMAIL', 'webmaster@mysite.local' ); // Optional
+define( 'NOBLOGREDIRECT', true ); // Required
 ```
 
 ## Change Log
