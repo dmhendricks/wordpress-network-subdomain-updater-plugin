@@ -3,22 +3,21 @@
  * @wordpress-plugin
  * Plugin Name:       Network Sub-Domain Updater
  * Description:       Update network (multisite) sub-domains after MySQL data import.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Daniel M. Hendricks
  * Author URI:        https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/
  * License:           GPL-2.0
- * License URI:       https://raw.githubusercontent.com/dmhendricks/wordpress-network-subdomain-updater-plugin/master/LICENSE
+ * License URI:       https://opensource.org/licenses/GPL-2.0
  */
 namespace CloudVerve\NetworkSubdomainUpdater;
 
 class SubdomainUpdate {
 
-  private $plugin_link;
+  private $plugin_link = 'https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin';
 
   function __construct() {
 
-    define( __NAMESPACE__ . '\VERSION', '1.0.0' );
-    $this->plugin_link = 'https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin';
+    define( __NAMESPACE__ . '\VERSION', '1.0.1' );
 
     // If NETWORK_LOCAL_DOMAIN isn't defined, do nothing.
     if( ( !defined( 'NETWORK_LOCAL_DOMAIN' ) && !trim( NETWORK_LOCAL_DOMAIN ) ) || !defined( 'SITE_ID_CURRENT_SITE' ) ) return;
@@ -56,17 +55,6 @@ class SubdomainUpdate {
 
     $scheme = defined( 'NETWORK_LOCAL_DOMAIN_SCHEME' ) && NETWORK_LOCAL_DOMAIN_SCHEME ? strtolower( trim( NETWORK_LOCAL_DOMAIN_SCHEME ) ) : null;
 
-    // [wp_options] Update home and siteurl values
-    $new_domain_url = rtrim( $this->set_url_scheme( $scheme, str_ireplace( $current_domain, $new_domain, network_site_url() ) ), '/' );
-    update_option( 'home', $new_domain_url );
-    update_option( 'siteurl', $new_domain_url );
-
-    // [wp_site.domain] Update current site domain
-    $wpdb->update( $wpdb->site, [ 'domain' => $new_domain ], [ 'id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
-
-    // [wp_sitemeta.siteurl] Update siteurl value
-    $wpdb->update( $wpdb->sitemeta, [ 'siteurl' => $new_domain ], [ 'site_id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
-
     // [wp_blogs.domain] Update each site's domain
     $blogs = array();
     $sites = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain FROM $wpdb->blogs WHERE site_id = %d", SITE_ID_CURRENT_SITE ) );
@@ -82,6 +70,18 @@ class SubdomainUpdate {
       update_blog_option( $blog_id, 'home', $new_site_url );
       update_blog_option( $blog_id, 'siteurl', $new_site_url );
     }
+
+    // [wp_options] Update home and siteurl values
+    $new_domain_url = rtrim( $this->set_url_scheme( $scheme, str_ireplace( $current_domain, $new_domain, network_site_url() ) ), '/' );
+    update_option( 'home', $new_domain_url );
+    update_option( 'siteurl', $new_domain_url );
+
+    // [wp_site.domain] Update current site domain
+    $wpdb->update( $wpdb->site, [ 'domain' => $new_domain ], [ 'id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
+
+    // [wp_sitemeta.siteurl] Update siteurl value
+    $wpdb->update( $wpdb->sitemeta, [ 'siteurl' => $new_domain ], [ 'site_id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
+
 
   }
 
