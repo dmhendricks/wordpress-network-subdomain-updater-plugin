@@ -122,6 +122,8 @@ define( 'NETWORK_LOCAL_DOMAIN', 'example.local' );
 Below is a typical example of the constants that you'd add/change in `wp-config.php`:
 
 ```
+define( 'WP_HOME','https://mysite.local' );
+define( 'WP_SITEURL','https://mysite.local' );
 define( 'DOMAIN_CURRENT_SITE', 'mysite.local' );
 define( 'NETWORK_LOCAL_DOMAIN', 'mysite.local' );
 define( 'WP_ADMIN_EMAIL', 'webmaster@mysite.local' ); // Optional
@@ -134,4 +136,4 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 
 #### Branch: `master`
 
-* Initial version
+* Fixed order of operations issue
