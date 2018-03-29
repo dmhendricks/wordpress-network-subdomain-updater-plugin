@@ -8,9 +8,7 @@
 
 A simple MU plugin that updates the primary domain on WordPress Network installations. It was primarily created for development and staging environments to make it easier when you sync data from a production site.
 
-**This plugin is in early stages of development. Use are your own risk. This plugin is useless to you if you are *not* running a [WordPress Network](https://codex.wordpress.org/Create_A_Network) in [Subdomain mode](https://codex.wordpress.org/Create_A_Network#Installing_a_Network)!**
-
-**Consider this alpha-quality code!**
+**Use are your own risk. This plugin is useless to you if you are *not* running a [WordPress Network](https://codex.wordpress.org/Create_A_Network) in [Subdomain mode](https://codex.wordpress.org/Create_A_Network#Installing_a_Network)!**
 
 ### How It Works
 
@@ -26,6 +24,10 @@ For example, I use [Local by Flywheel](https://local.getflywheel.com/) for local
 4. Define the appropriate [constants](https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin#configuration) in `wp-config.php`.
 
 Now, each time that you import MySQL dumps from your remote server to your local development database, this plugin will update the primary network and sub-sites to your local domain.
+
+##### Important Note
+
+This plugin will only update the domains in `wp_site`, `wp_blogs`, `wp_options`, etc to that your web site will load properly. It **will not** do a global find-and-replace for other/hard-coded domains. If you wish to do that **after** running this plugin, I recommend [Better Search Replace](https://wordpress.org/plugins/better-search-replace/).
 
 ## Installation
 
