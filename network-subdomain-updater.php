@@ -3,7 +3,7 @@
  * @wordpress-plugin
  * Plugin Name:       Network Sub-Domain Updater
  * Description:       Update network (multisite) sub-domains after MySQL data import.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Daniel M. Hendricks
  * Author URI:        https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/
  * License:           GPL-2.0
@@ -13,19 +13,21 @@ namespace CloudVerve\NetworkSubdomainUpdater;
 
 class SubdomainUpdate {
 
-  private $plugin_link = 'https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin';
+  private $primary_site_domain;
 
   function __construct() {
 
-    define( __NAMESPACE__ . '\VERSION', '1.0.1' );
+    define( __NAMESPACE__ . '\VERSION', '1.0.2' );
 
-    // If NETWORK_LOCAL_DOMAIN isn't defined, do nothing.
-    if( ( !defined( 'NETWORK_LOCAL_DOMAIN' ) && !trim( NETWORK_LOCAL_DOMAIN ) ) || !defined( 'SITE_ID_CURRENT_SITE' ) ) return;
+    // If DOMAIN_CURRENT_SITE isn't defined, do nothing.
+    if( !defined( 'DOMAIN_CURRENT_SITE' ) || !trim( DOMAIN_CURRENT_SITE ) ) return;
 
     // If network domain hasn't changed, do nothing.
     global $wpdb;
-    $current_domain = current( $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM $wpdb->site WHERE id = %d", SITE_ID_CURRENT_SITE ) ) );
-    $local_domain = strtolower( trim( NETWORK_LOCAL_DOMAIN ) );
+    $current_domain = $this->get_root_domain( current( $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM $wpdb->site WHERE id = %d", SITE_ID_CURRENT_SITE ) ) ) );
+    $this->primary_site_domain = strtolower( trim( DOMAIN_CURRENT_SITE ) ); // Example: www.example.com
+    $local_domain = $this->get_root_domain( $this->primary_site_domain ); // Example: example.com
+
     if( !$current_domain || $current_domain == $local_domain ) return;
 
     // Update admin e-mail address, if defined
@@ -59,7 +61,8 @@ class SubdomainUpdate {
     $blogs = array();
     $sites = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain FROM $wpdb->blogs WHERE site_id = %d", SITE_ID_CURRENT_SITE ) );
     foreach( $sites as $site ) {
-      $wpdb->update( $wpdb->blogs, [ 'domain' => str_ireplace( $current_domain, $new_domain, $site->domain ) ], [ 'site_id' => SITE_ID_CURRENT_SITE, 'blog_id' => $site->blog_id ], [ '%s' ], [ '%d' ] );
+      $site_domain = defined( 'NETWORK_LOCAL_DOMAIN_STRIP_WWW' ) && NETWORK_LOCAL_DOMAIN_STRIP_WWW ? ltrim( $site->domain, 'www.' ) : $site->domain;
+      $wpdb->update( $wpdb->blogs, [ 'domain' => str_ireplace( $current_domain, $new_domain, $site_domain ) ], [ 'site_id' => SITE_ID_CURRENT_SITE, 'blog_id' => $site->blog_id ], [ '%s' ], [ '%d' ] );
       $blogs[] = $site->blog_id;
     }
 
@@ -72,16 +75,15 @@ class SubdomainUpdate {
     }
 
     // [wp_options] Update home and siteurl values
-    $new_domain_url = rtrim( $this->set_url_scheme( $scheme, str_ireplace( $current_domain, $new_domain, network_site_url() ) ), '/' );
+    $new_domain_url = $this->set_url_scheme( $scheme, network_site_url() );
     update_option( 'home', $new_domain_url );
     update_option( 'siteurl', $new_domain_url );
 
-    // [wp_site.domain] Update current site domain
-    $wpdb->update( $wpdb->site, [ 'domain' => $new_domain ], [ 'id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
+    // [wp_site.site] Update current site domain
+    $wpdb->update( $wpdb->site, [ 'domain' => $this->primary_site_domain ], [ 'id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
 
     // [wp_sitemeta.siteurl] Update siteurl value
-    $wpdb->update( $wpdb->sitemeta, [ 'siteurl' => $new_domain ], [ 'site_id' => SITE_ID_CURRENT_SITE ], [ '%s' ], [ '%d' ] );
-
+    $wpdb->update( $wpdb->sitemeta, [ 'meta_value' => $new_domain_url ], [ 'site_id' => SITE_ID_CURRENT_SITE, 'meta_key' => 'siteurl' ], [ '%s' ], [ '%d', '%s' ] );
 
   }
 
@@ -127,6 +129,7 @@ class SubdomainUpdate {
   private function set_url_scheme( $scheme, $url ) {
 
     if( !$scheme || !filter_var( $url, FILTER_VALIDATE_URL ) ) return $url;
+    if( strpos( $url, '//' ) === false ) return $scheme . '://' . $url;
 
     $url = explode( '//', $url );
     if( $url[0] ) $url[0] = $scheme . ':';
@@ -134,5 +137,20 @@ class SubdomainUpdate {
 
   }
 
+  /**
+    * Strip subdomain(s) from a domain.
+    *    Example: www.example.com becomes example.com
+    *
+    * @param string $domain The name of the domain to strip subdomains from
+    * @return string The resulting root domain
+    * @since 1.0.2
+    */
+  private function get_root_domain( $domain ) {
+    $domain = array_slice( explode( '.', $domain ), -2, 2, true );
+    return implode( '.', $domain );
+  }
+
 }
-new SubdomainUpdate();
+
+if( !defined( 'NETWORK_LOCAL_DOMAIN_DISABLE' ) || ( defined( 'NETWORK_LOCAL_DOMAIN_DISABLE' ) && !NETWORK_LOCAL_DOMAIN_DISABLE ) )
+  new SubdomainUpdate();

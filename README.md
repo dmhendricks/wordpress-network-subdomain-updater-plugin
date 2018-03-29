@@ -29,52 +29,59 @@ Now, each time that you import MySQL dumps from your remote server to your local
 
 ## Installation
 
-**NB!** This plugin is only intended to be used in staging and development environments! It is not intended to be run on production servers as it will incur a performance hit. You **can try** to use it to rename the primary domain on a production instance (create a MySQL backup first!), but once it's run and the domains are renamed, you should remove the plugin.
+**NB!** This plugin is only intended to be used in staging and development environments! It is not intended to be run on production servers as it will incur a performance hit. You **can** use it to rename the primary domain on a production instance (create a MySQL backup first!), but once it's run and the domains are renamed, you should remove the plugin (or at least disable it with `NETWORK_LOCAL_DOMAIN_DISABLE`).
 
 To install, simply download the `network-subdomain-updater.php` file and place it in your `wp-content/mu-plugins` directory (create one if it doesn't exist). Don't copy the other files - they are not necessary.
 
 ## Configuration
 
-Simply define a `NETWORK_LOCAL_DOMAIN` constant in the `wp-config.php` for each instance you wish to use it on.
-
 ### Constants
 
 This plugin is configured with constants that you defined in your development/staging environments `wp-config.php` files.
 
-**SITE_ID_CURRENT_SITE** (required)
+**SITE_ID_CURRENT_SITE** *(required)*
 
-```
+```php
 define( 'SITE_ID_CURRENT_SITE', 1 );
 ```
 
-**NETWORK_LOCAL_DOMAIN** (required)
+**NOBLOGREDIRECT** *(required)*
 
-Examples:
-```
-define( 'NETWORK_LOCAL_DOMAIN', 'mylocaldomain.local' ); // Example local development domain
-define( 'NETWORK_LOCAL_DOMAIN', 'staging.example.com' ); // Example staging instance domain
-```
-
-**NOBLOGREDIRECT** (required)
-
-```
+```php
 define( 'NOBLOGREDIRECT', true ); // Must be set to true!
 ```
+
+**NETWORK_LOCAL_DOMAIN_DISABLE**
+
+```php
+define( 'NETWORK_LOCAL_DOMAIN_DISABLE', true );
+```
+
+Allows you to temporarily disable the plugin from loading at all, useful if you do not sync your data frequently.
 
 **NETWORK_LOCAL_DOMAIN_SCHEME**
 
 Examples:
-```
+```php
 define( 'NETWORK_LOCAL_DOMAIN_SCHEME', 'https' ); // Prefix site URLs with: https
 define( 'NETWORK_LOCAL_DOMAIN_SCHEME', 'http' ); // Prefix site URLs with: http
 ```
 
 (This allows you to force HTTP or HTTPS on updated site URLs, depending on what your LAMP environment supports. If not defined or set to `false`, original URL prefixes will be preserved.)
 
+**NETWORK_LOCAL_DOMAIN_STRIP_WWW**
+
+Examples:
+```php
+define( 'NETWORK_LOCAL_DOMAIN_STRIP_WWW', true );
+```
+
+Strips `www.` from domains, useful if your local development environment doesn't alias it.
+
 **WP_ADMIN_EMAIL**
 
 If specified, changes the `admin_mail` value in `wp_options`, useful for debugging:
-```
+```php
 define( 'WP_ADMIN_EMAIL', 'you@example.com' );
 ```
 
@@ -85,17 +92,17 @@ define( 'WP_ADMIN_EMAIL', 'you@example.com' );
 If defined, sends a notification e-mail stating that an update was performed.
 
 Send to `admin_email` using plugin defaults:
-```
+```php
 define( 'NETWORK_LOCAL_UPDATE_NOTIFY', true );
 ```
 
 Send to specific e-mail address:
-```
+```php
 define( 'NETWORK_LOCAL_UPDATE_NOTIFY', 'you@example.com' );
 ```
 
 PHP 7 or higher Options:
-```
+```php
 define( 'NETWORK_LOCAL_UPDATE_NOTIFY', [ 'email' => 'you@yourdomain.com', 'subject' => 'Site sync!', 'message' => 'This space intentionally left blank.' ] );
 ```
 
@@ -107,26 +114,29 @@ Let's assume the following:
 - Your staging environment sites are at: `*.staging.example.com`
 - Your development environment sites are at: `*.example.local`
 
-In your *staging* environment's `wp-config.php`, you might define `NETWORK_LOCAL_DOMAIN` as follows:
-```
-define( 'NETWORK_LOCAL_DOMAIN', 'staging.example.com' );
+In your *staging* environment's `wp-config.php`, you might define `DOMAIN_CURRENT_SITE` as follows:
+```php
+define( 'DOMAIN_CURRENT_SITE', 'staging.example.com' );
 ```
 
-In your *development* environment's `wp-config.php`, you might define `NETWORK_LOCAL_DOMAIN` as follows:
-```
-define( 'NETWORK_LOCAL_DOMAIN', 'example.local' );
+In your *development* environment's `wp-config.php`, you might define `DOMAIN_CURRENT_SITE` as follows:
+```php
+define( 'DOMAIN_CURRENT_SITE', 'example.local' );
 ```
 
 ### Typical Example
 
 Below is a typical example of the constants that you'd add/change in `wp-config.php`:
 
-```
-define( 'WP_HOME','https://mysite.local' );
-define( 'WP_SITEURL','https://mysite.local' );
+```php
+// Defined for multisite
 define( 'DOMAIN_CURRENT_SITE', 'mysite.local' );
-define( 'NETWORK_LOCAL_DOMAIN', 'mysite.local' );
+// ...
+
+// Constants specific to this plugin
 define( 'WP_ADMIN_EMAIL', 'webmaster@mysite.local' ); // Optional
+define( 'NETWORK_LOCAL_DOMAIN_STRIP_WWW', true );
+define( 'NETWORK_LOCAL_DOMAIN_SCHEME', 'https' ); // Optional
 define( 'NOBLOGREDIRECT', true ); // Required
 ```
 
@@ -136,4 +146,4 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 
 #### Branch: `master`
 
-* Fixed order of operations issue
+* Fixed bug where only first blog in list was updated
