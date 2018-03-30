@@ -146,6 +146,10 @@ define( 'NOBLOGREDIRECT', true ); // Required
 
 This plugin will store the last sync date in a network settings field named `_nsu_last_data_sync`. In development and staging, I display this date in the [WP Admin footer](https://web-design-weekly.com/snippets/modify-footer-text-in-wordpress-admin-area/), but you may use as you wish.
 
+```php
+echo get_site_option( '_nsu_last_data_sync', 'unknown' );
+```
+
 ## Change Log
 
 Release changes are noted on the [Releases](https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/releases) page.
