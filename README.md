@@ -25,7 +25,7 @@ For example, I use [Local by Flywheel](https://local.getflywheel.com/) for local
 
 Now, each time that you import MySQL dumps from your remote server to your local development database, this plugin will update the primary network and sub-sites to your local domain.
 
-##### Important Note
+#### Important Note
 
 This plugin will only update the domains in `wp_site`, `wp_blogs`, `wp_options`, etc to that your web site will load properly. It **will not** do a global find-and-replace for other/hard-coded domains. If you wish to do that **after** running this plugin, I recommend [Better Search Replace](https://wordpress.org/plugins/better-search-replace/).
 
@@ -142,6 +142,10 @@ define( 'NETWORK_LOCAL_DOMAIN_SCHEME', 'https' ); // Optional
 define( 'NOBLOGREDIRECT', true ); // Required
 ```
 
+### Last Sync Date
+
+This plugin will store the last sync date in a network settings field named `_nsu_last_data_sync`. In development and staging, I display this date in the [WP Admin footer](https://web-design-weekly.com/snippets/modify-footer-text-in-wordpress-admin-area/), but you may use as you wish.
+
 ## Change Log
 
 Release changes are noted on the [Releases](https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/releases) page.
@@ -149,3 +153,5 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 #### Branch: `master`
 
 * Fixed bug where only first blog in list was updated
+* Fixed issue where multilevel sub-domains not set correctly
+* Added field to network site options to store last sync date

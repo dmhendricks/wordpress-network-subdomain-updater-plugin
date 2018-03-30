@@ -3,7 +3,7 @@
  * @wordpress-plugin
  * Plugin Name:       Network Sub-Domain Updater
  * Description:       Update network (multisite) sub-domains after MySQL data import.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Daniel M. Hendricks
  * Author URI:        https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/
  * License:           GPL-2.0
@@ -17,16 +17,16 @@ class SubdomainUpdate {
 
   function __construct() {
 
-    define( __NAMESPACE__ . '\VERSION', '1.0.2' );
+    define( __NAMESPACE__ . '\VERSION', '1.0.3' );
 
     // If DOMAIN_CURRENT_SITE isn't defined, do nothing.
     if( !defined( 'DOMAIN_CURRENT_SITE' ) || !trim( DOMAIN_CURRENT_SITE ) ) return;
 
     // If network domain hasn't changed, do nothing.
     global $wpdb;
-    $current_domain = $this->get_root_domain( current( $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM $wpdb->site WHERE id = %d", SITE_ID_CURRENT_SITE ) ) ) );
+    $current_domain = $this->trim_www( current( $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM $wpdb->site WHERE id = %d", SITE_ID_CURRENT_SITE ) ) ) );
     $this->primary_site_domain = strtolower( trim( DOMAIN_CURRENT_SITE ) ); // Example: www.example.com
-    $local_domain = $this->get_root_domain( $this->primary_site_domain ); // Example: example.com
+    $local_domain = $this->trim_www( $this->primary_site_domain ); // Example: example.com
 
     if( !$current_domain || $current_domain == $local_domain ) return;
 
@@ -61,7 +61,7 @@ class SubdomainUpdate {
     $blogs = array();
     $sites = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain FROM $wpdb->blogs WHERE site_id = %d", SITE_ID_CURRENT_SITE ) );
     foreach( $sites as $site ) {
-      $site_domain = defined( 'NETWORK_LOCAL_DOMAIN_STRIP_WWW' ) && NETWORK_LOCAL_DOMAIN_STRIP_WWW ? ltrim( $site->domain, 'www.' ) : $site->domain;
+      $site_domain = defined( 'NETWORK_LOCAL_DOMAIN_STRIP_WWW' ) && NETWORK_LOCAL_DOMAIN_STRIP_WWW ? $this->trim_www( $site->domain ) : $site->domain;
       $wpdb->update( $wpdb->blogs, [ 'domain' => str_ireplace( $current_domain, $new_domain, $site_domain ) ], [ 'site_id' => SITE_ID_CURRENT_SITE, 'blog_id' => $site->blog_id ], [ '%s' ], [ '%d' ] );
       $blogs[] = $site->blog_id;
     }
@@ -84,6 +84,9 @@ class SubdomainUpdate {
 
     // [wp_sitemeta.siteurl] Update siteurl value
     $wpdb->update( $wpdb->sitemeta, [ 'meta_value' => $new_domain_url ], [ 'site_id' => SITE_ID_CURRENT_SITE, 'meta_key' => 'siteurl' ], [ '%s' ], [ '%d', '%s' ] );
+
+    // Set last data update date/time
+    update_site_option( '_nsu_last_data_sync', date ( 'Y-m-d' ) );
 
   }
 
@@ -148,6 +151,17 @@ class SubdomainUpdate {
   private function get_root_domain( $domain ) {
     $domain = array_slice( explode( '.', $domain ), -2, 2, true );
     return implode( '.', $domain );
+  }
+
+  /**
+    * Remove preceding 'www.' from domain
+    *
+    * @param string $domain The domain to process
+    * @return string The result
+    * @since 1.0.3
+    */
+  private function trim_www( $domain ) {
+    return ltrim( $domain, 'www.' );
   }
 
 }
