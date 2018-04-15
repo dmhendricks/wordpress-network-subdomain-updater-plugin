@@ -166,4 +166,4 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 
 #### Branch: `master`
 
-* Added constant `NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL` to allow updating `admin_email` for *all* sub-sites.
+* None since release
