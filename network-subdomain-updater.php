@@ -7,7 +7,7 @@
  * Author:            Daniel M. Hendricks
  * Author URI:        https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/
  * License:           GPL-2.0
- * License URI:       https://opensource.org/licenses/GPL-2.0
+ * License URI:       https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/blob/master/LICENSE
  */
 namespace CloudVerve\NetworkSubdomainUpdater;
 
