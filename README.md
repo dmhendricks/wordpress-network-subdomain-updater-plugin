@@ -156,6 +156,4 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 
 #### Branch: `master`
 
-* Fixed bug where only first blog in list was updated
-* Fixed issue where multilevel sub-domains not set correctly
-* Added field to network site options to store last sync date
+* None since release
