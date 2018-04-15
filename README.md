@@ -2,6 +2,7 @@
 [![Latest Release](https://img.shields.io/github/release/dmhendricks/wordpress-network-subdomain-updater-plugin.svg)](https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/releases)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/danielhendricks)
 [![License](https://img.shields.io/badge/license-GPLv2-yellow.svg)](https://raw.githubusercontent.com/dmhendricks/wordpress-network-subdomain-updater-plugin/master/LICENSE)
+[![CloudVerve, LLC](https://img.shields.io/badge/style-FlyWheel-green.svg?style=flat&label=get%20hosted&colorB=AE2A21)](https://getflywheel.com/why-flywheel/?utm_source=github.com&utm_medium=campaign&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/dmhendricks/wordpress-network-subdomain-updater-plugin.svg?style=social)](https://twitter.com/danielhendricks)
 
 # Network Sub-domain Updater for WordPress
@@ -39,7 +40,7 @@ To install, simply download the `network-subdomain-updater.php` file and place i
 
 ### Constants
 
-This plugin is configured with constants that you defined in your development/staging environments `wp-config.php` files.
+This plugin is configured with constants that you defined in your development/staging environments `wp-config.php` files. **Why constants and not settings in WP Admin?** Because they would get blown away every time you import a fresh database dump.
 
 **SITE_ID_CURRENT_SITE** *(required)*
 
@@ -88,6 +89,15 @@ define( 'WP_ADMIN_EMAIL', 'you@example.com' );
 ```
 
 (This is irrelevant if you are using something like [MailHog](https://github.com/mailhog/MailHog) to intercept e-mails.)
+
+**NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL**
+
+If set to true, plugin will update the `admin_email` for all sub-sites to `WP_ADMIN_EMAIL` (rather than only the network admin e-mail):
+```php
+define( 'NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL', true );
+```
+
+Used in conjunction with `WP_ADMIN_EMAIL`, which must also be set.
 
 **NETWORK_LOCAL_UPDATE_NOTIFY**
 
@@ -156,4 +166,4 @@ Release changes are noted on the [Releases](https://github.com/dmhendricks/wordp
 
 #### Branch: `master`
 
-* None since release
+* Added constant `NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL` to allow updating `admin_email` for *all* sub-sites.

@@ -3,7 +3,7 @@
  * @wordpress-plugin
  * Plugin Name:       Network Sub-Domain Updater
  * Description:       Update network (multisite) sub-domains after MySQL data import.
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            Daniel M. Hendricks
  * Author URI:        https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/
  * License:           GPL-2.0
@@ -17,7 +17,7 @@ class SubdomainUpdate {
 
   function __construct() {
 
-    define( __NAMESPACE__ . '\VERSION', '1.0.3' );
+    define( __NAMESPACE__ . '\VERSION', '1.0.4' );
 
     // If DOMAIN_CURRENT_SITE isn't defined, do nothing.
     if( !defined( 'DOMAIN_CURRENT_SITE' ) || !trim( DOMAIN_CURRENT_SITE ) ) return;
@@ -33,6 +33,7 @@ class SubdomainUpdate {
     // Update admin e-mail address, if defined
     if( defined( 'WP_ADMIN_EMAIL' ) && WP_ADMIN_EMAIL ) {
       update_option( 'admin_email', WP_ADMIN_EMAIL );
+      update_site_option( 'admin_email', WP_ADMIN_EMAIL );
     }
 
     // Update site sub-domains to match local domain
@@ -72,6 +73,11 @@ class SubdomainUpdate {
       $new_site_url = $this->set_url_scheme( $scheme, str_ireplace( $current_domain, $new_domain, $current_url ) );
       update_blog_option( $blog_id, 'home', $new_site_url );
       update_blog_option( $blog_id, 'siteurl', $new_site_url );
+
+      // Update sub-site admin_email, if NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL is set true
+      if( defined( 'WP_ADMIN_EMAIL' ) && WP_ADMIN_EMAIL && defined( 'NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL' ) && NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL ) {
+        update_site_option( $blog_id, 'admin_email', WP_ADMIN_EMAIL );
+      }
     }
 
     // [wp_options] Update home and siteurl values
