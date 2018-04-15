@@ -76,7 +76,7 @@ class SubdomainUpdate {
 
       // Update sub-site admin_email, if NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL is set true
       if( defined( 'WP_ADMIN_EMAIL' ) && WP_ADMIN_EMAIL && defined( 'NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL' ) && NETWORK_UPDATE_SUBSITE_ADMIN_EMAIL ) {
-        update_site_option( $blog_id, 'admin_email', WP_ADMIN_EMAIL );
+        update_blog_option( $blog_id, 'admin_email', WP_ADMIN_EMAIL );
       }
     }
 
