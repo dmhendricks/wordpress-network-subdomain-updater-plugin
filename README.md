@@ -2,7 +2,7 @@
 [![Latest Release](https://img.shields.io/github/release/dmhendricks/wordpress-network-subdomain-updater-plugin.svg)](https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/releases)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/danielhendricks)
 [![License](https://img.shields.io/badge/license-GPLv2-yellow.svg)](https://raw.githubusercontent.com/dmhendricks/wordpress-network-subdomain-updater-plugin/master/LICENSE)
-[![CloudVerve, LLC](https://img.shields.io/badge/style-FlyWheel-green.svg?style=flat&label=get%20hosted&colorB=AE2A21)](https://getflywheel.com/why-flywheel/?utm_source=github.com&utm_medium=campaign&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin)
+[![FlyWheel](https://img.shields.io/badge/style-FlyWheel-green.svg?style=flat&label=get%20hosted&colorB=AE2A21)](https://getflywheel.com/why-flywheel/?utm_source=github.com&utm_medium=campaign&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/dmhendricks/wordpress-network-subdomain-updater-plugin.svg?style=social)](https://twitter.com/danielhendricks)
 
 # Network Sub-domain Updater for WordPress
@@ -10,6 +10,8 @@
 A simple MU plugin that updates the primary domain on WordPress Network installations. It was primarily created for development and staging environments to make it easier when you sync data from a production site.
 
 **Use are your own risk. This plugin is useless to you if you are *not* running a [WordPress Network](https://codex.wordpress.org/Create_A_Network) in [Subdomain mode](https://codex.wordpress.org/Create_A_Network#Installing_a_Network)!**
+
+:pushpin: Use in conjunction with: [Rewrite Content URLs](https://github.com/dmhendricks/wordpress-rewrite-content-urls-plugin)
 
 ### How It Works
 
