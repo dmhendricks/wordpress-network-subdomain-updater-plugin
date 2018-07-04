@@ -2,7 +2,7 @@
 [![Latest Release](https://img.shields.io/github/release/dmhendricks/wordpress-network-subdomain-updater-plugin.svg)](https://github.com/dmhendricks/wordpress-network-subdomain-updater-plugin/releases)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/danielhendricks)
 [![License](https://img.shields.io/badge/license-GPLv2-yellow.svg)](https://raw.githubusercontent.com/dmhendricks/wordpress-network-subdomain-updater-plugin/master/LICENSE)
-[![FlyWheel](https://img.shields.io/badge/style-FlyWheel-green.svg?style=flat&label=get%20hosted&colorB=AE2A21)](https://getflywheel.com/why-flywheel/?utm_source=github.com&utm_medium=campaign&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin)
+[![FlyWheel](https://img.shields.io/badge/style-FlyWheel-green.svg?style=flat&label=get%20hosted&colorB=AE2A21)](https://share.getf.ly/e25g6k?utm_source=github.com&utm_medium=referral&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/dmhendricks/wordpress-network-subdomain-updater-plugin.svg?style=social)](https://twitter.com/danielhendricks)
 
 # Network Sub-domain Updater for WordPress
@@ -19,7 +19,7 @@ Let's say you run a WordPress Network of sub-domains. If you did a MySQL dump fr
 
 This plugin checks to see if the primary domain changed, and if so, updates the sub-sites and relevant database fields.
 
-For example, I use [Local by Flywheel](https://local.getflywheel.com/?utm_source=github.com&utm_medium=campaign&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin) for local WordPress development:
+For example, I use [Local by Flywheel](https://local.getflywheel.com/?utm_source=github.com&utm_medium=referral&utm_content=button&utm_campaign=wordpress-network-subdomain-updater-plugin) for local WordPress development:
 
 1. Create a local WordPress multisite instance.
 2. Copy necessary file assets (plugins, themes, uploads, etc) from the remote site.
