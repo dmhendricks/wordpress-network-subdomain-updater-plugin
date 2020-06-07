@@ -19,13 +19,13 @@ class SubdomainUpdate {
 
     define( __NAMESPACE__ . '\VERSION', '1.0.4' );
 
-    // If DOMAIN_CURRENT_SITE isn't defined, do nothing.
-    if( !defined( 'DOMAIN_CURRENT_SITE' ) || !trim( DOMAIN_CURRENT_SITE ) ) return;
+    // If NSDU_URL isn't defined, do nothing.
+    if( !defined( 'NSDU_URL' ) || !trim( NSDU_URL ) ) return;
 
     // If network domain hasn't changed, do nothing.
     global $wpdb;
     $current_domain = $this->trim_www( current( $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM $wpdb->site WHERE id = %d", SITE_ID_CURRENT_SITE ) ) ) );
-    $this->primary_site_domain = strtolower( trim( DOMAIN_CURRENT_SITE ) ); // Example: www.example.com
+    $this->primary_site_domain = strtolower( trim( NSDU_URL ) ); // Example: www.example.com
     $local_domain = $this->trim_www( $this->primary_site_domain ); // Example: example.com
 
     if( !$current_domain || $current_domain == $local_domain ) return;
